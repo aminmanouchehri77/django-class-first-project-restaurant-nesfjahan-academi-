@@ -1,0 +1,182 @@
+{% extends "_base.html" %}
+
+{% block title %}منوی رستوران | تجربه لوکس چشایی{% endblock %}
+
+{% block style_css %}
+<style>
+    @keyframes floating {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .float-anim {
+        animation: floating 4s ease-in-out infinite;
+    }
+
+    .food-hidden {
+        display: none;
+    }
+
+    .category-btn-active {
+        background-color: rgb(245 158 11);
+        color: #000;
+        box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+    }
+</style>
+{% endblock style_css %}
+
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 pt-10 pb-20">
+
+    <section class="relative overflow-hidden rounded-[2rem] p-8 md:p-16 mb-16 glass-card border-amber-500/20">
+        <div class="relative z-10 grid md:grid-cols-2 gap-10 items-center">
+            <div>
+                <h2 class="text-3xl md:text-6xl font-black mb-6 leading-tight">
+                    هنر آشپزی در <br><span class="text-gradient">بالاترین سطح</span>
+                </h2>
+                <p class="text-gray-400 text-lg mb-8 max-w-md leading-relaxed">
+                    با استفاده از مواد اولیه ارگانیک و دستورالعمل‌های اختصاصی، ما طعمی را خلق می‌کنیم که تا همیشه در یاد شما بماند.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#menu" class="bg-amber-500 text-black font-bold px-8 py-4 rounded-2xl hover:bg-amber-400 transition shadow-xl shadow-amber-500/20">
+                        مشاهده منو
+                    </a>
+                    <button class="glass-card px-8 py-4 rounded-2xl font-bold hover:bg-white/5 transition">
+                        رزرو میز
+                    </button>
+                </div>
+            </div>
+
+            <div class="hidden md:flex justify-center">
+                <div class="relative w-80 h-80 float-anim">
+                    <div class="absolute inset-0 bg-amber-500/20 blur-[100px] rounded-full"></div>
+                    <img
+                        src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500"
+                        alt="Specialty"
+                        class="relative z-10 w-full h-full object-cover rounded-[3rem] rotate-6 border-4 border-white/10 shadow-2xl"
+                    >
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="menu" class="mb-12">
+        <div class="flex items-center gap-6 overflow-x-auto no-scrollbar pb-4">
+            <button
+                type="button"
+                class="category-btn category-btn-active font-bold px-8 py-3 rounded-2xl whitespace-nowrap transition"
+                data-category="all"
+            >
+                🌟 همه
+            </button>
+
+            {% for category in categories %}
+                <button
+                    type="button"
+                    class="category-btn glass-card text-gray-300 hover:text-white px-8 py-3 rounded-2xl whitespace-nowrap transition"
+                    data-category="{{ category.id }}"
+                >
+                    {{ category.title }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="foods-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for food in foods %}
+            {% if food.is_exist %}
+                <div
+                    class="food-card glass-card rounded-[2.5rem] overflow-hidden group"
+                    data-category="{{ food.category.id }}"
+                >
+                    <div class="relative h-64 overflow-hidden">
+                        <img
+                            src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600"
+                            class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+                            alt="{{ food.name }}"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-80"></div>
+
+                        <div class="absolute bottom-4 right-4">
+                            <span class="bg-white/10 backdrop-blur-md text-white text-[10px] font-black px-3 py-1.5 rounded-lg">
+                                {{ food.category.title }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-8">
+                        <div class="flex justify-between items-center mb-4 gap-4">
+                            <h3 class="text-xl font-bold text-white">
+                                {{ food.name }}
+                            </h3>
+                            <div class="flex text-amber-500 text-xs whitespace-nowrap">
+                                ⭐⭐⭐⭐⭐
+                            </div>
+                        </div>
+
+                        <p class="text-gray-400 text-sm mb-8 leading-loose">
+                            {{ food.content }}
+                        </p>
+
+                        <div class="flex justify-between items-center gap-4">
+                            <span class="text-2xl font-black text-white">
+                                {{ food.price }}
+                                <span class="text-xs text-amber-500 font-normal">تومان</span>
+                            </span>
+
+                            <button
+                                type="button"
+                                class="bg-white text-black p-4 rounded-2xl hover:bg-amber-500 transition-all duration-300 group-hover:rotate-12"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% empty %}
+            <div class="col-span-full glass-card rounded-[2rem] p-10 text-center text-gray-400">
+                هنوز غذایی برای نمایش ثبت نشده است.
+            </div>
+        {% endfor %}
+    </div>
+</main>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoryButtons = document.querySelectorAll('.category-btn');
+        const foodCards = document.querySelectorAll('.food-card');
+
+        categoryButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const selectedCategory = this.dataset.category;
+
+                categoryButtons.forEach(function (btn) {
+                    btn.classList.remove('category-btn-active', 'bg-amber-500', 'text-black', 'shadow-lg', 'shadow-amber-500/20');
+                    if (btn.dataset.category !== selectedCategory) {
+                        btn.classList.add('glass-card', 'text-gray-300');
+                    }
+                });
+
+                this.classList.add('category-btn-active', 'bg-amber-500', 'text-black', 'shadow-lg', 'shadow-amber-500/20');
+                this.classList.remove('glass-card', 'text-gray-300');
+
+                foodCards.forEach(function (card) {
+                    const cardCategory = card.dataset.category;
+
+                    if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+                        card.classList.remove('food-hidden');
+                    } else {
+                        card.classList.add('food-hidden');
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock extra_js %}
