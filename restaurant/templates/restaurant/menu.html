@@ -91,11 +91,18 @@
                     data-category="{{ food.category.id }}"
                 >
                     <div class="relative h-64 overflow-hidden">
-                        <img
-                            src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600"
-                            class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
-                            alt="{{ food.name }}"
-                        >
+                        {% if food.image %}
+                            <img
+                                src="{{ food.image.url }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition duration-700"
+                                alt="{{ food.name }}"
+                            >
+                        {% else %}
+                            <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900 text-gray-400 text-sm">
+                                تصویری برای این غذا ثبت نشده است
+                            </div>
+                        {% endif %}
+
                         <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent opacity-80"></div>
 
                         <div class="absolute bottom-4 right-4">
