@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     path("",views.menu,name="menu"),
-    path('food/<int:pk>',views.food_detail,name="food_detail")
+    path('food/<uuid:pk>',views.food_detail_view,name="food_detail")
     
 ]
 
