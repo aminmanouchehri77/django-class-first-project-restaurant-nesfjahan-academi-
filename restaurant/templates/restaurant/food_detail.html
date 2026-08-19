@@ -210,9 +210,13 @@
             <button type="button" class="tab-btn glass-card px-6 py-3 rounded-2xl font-bold transition text-gray-300" data-tab="notes">
                 نکات سفارش
             </button>
+            <button type="button" class="tab-btn glass-card px-6 py-3 rounded-2xl font-bold transition text-gray-300" data-tab="reviews">
+                نظرات کاربران ({% if reviews %}{{ reviews|length }}{% else %}0{% endif %})
+            </button>
         </div>
 
         <div class="tab-content glass-card rounded-[2.5rem] p-6 md:p-8">
+            <!-- تب جزئیات -->
             <div class="tab-panel" data-tab-panel="details">
                 <h3 class="text-2xl font-bold text-white mb-4">درباره این غذا</h3>
                 <p class="text-gray-400 leading-loose">
@@ -220,6 +224,7 @@
                 </p>
             </div>
 
+            <!-- تب پیشنهادهای مشابه -->
             <div class="tab-panel hidden" data-tab-panel="more">
                 <h3 class="text-2xl font-bold text-white mb-4">پیشنهادهای مشابه</h3>
                 <p class="text-gray-400 leading-loose mb-6">
@@ -231,6 +236,7 @@
                 </a>
             </div>
 
+            <!-- تب نکات سفارش -->
             <div class="tab-panel hidden" data-tab-panel="notes">
                 <h3 class="text-2xl font-bold text-white mb-4">نکات مهم سفارش</h3>
                 <ul class="space-y-3 text-gray-400 leading-loose">
@@ -238,6 +244,98 @@
                     <li>• زمان آماده‌سازی بسته به حجم سفارش متفاوت است</li>
                     <li>• در صورت نیاز به تغییرات، قبل از ثبت سفارش اعلام کنید</li>
                 </ul>
+            </div>
+
+            <!-- تب نظرات کاربران -->
+            <div class="tab-panel hidden" data-tab-panel="reviews">
+                <div class="flex items-center justify-between mb-6 flex-wrap gap-4">
+                    <h3 class="text-2xl font-bold text-white">نظرات و امتیازهای کاربران</h3>
+                    <span class="text-sm text-gray-400">تجربه خود را از این غذا با دیگران به اشتراک بگذارید</span>
+                </div>
+
+                <!-- لیست نظرات موجود -->
+                <div class="space-y-4 mb-10">
+                    {% if reviews %}
+                        {% for review in reviews %}
+                            <div class="info-card rounded-2xl p-5 md:p-6">
+                                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
+                                            {{ review.name|slice:":1"|upper }}
+                                        </div>
+                                        <div>
+                                            <h4 class="text-white font-bold text-base">{{ review.name }}</h4>
+                                            <span class="text-xs text-gray-400">{{ review.created_at|default:"اخیر" }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                        {% if review.rating == 5 %}★★★★★{% elif review.rating == 4 %}★★★★☆{% elif review.rating == 3 %}★★★☆☆{% elif review.rating == 2 %}★★☆☆☆{% else %}★☆☆☆☆{% endif %}
+                                    </div>
+                                </div>
+                                <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                                    {{ review.comment }}
+                                </p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="info-card rounded-2xl p-8 text-center text-gray-400">
+                            هنوز نظری برای این غذا ثبت نشده است. اولین نفری باشید که نظر می‌دهد!
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- فرم ثبت نظر جدید -->
+                <div class="border-t border-white/10 pt-8">
+                    <h4 class="text-xl font-bold text-white mb-4">ثبت نظر جدید</h4>
+                    
+                    <!-- در صورت استفاده از فرم جنگو: replace action or form fields as needed -->
+                    <form method="POST" action="" class="space-y-4">
+                        {% csrf_token %}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">نام و نام خانوادگی</label>
+                                <input 
+                                    type="text" 
+                                    name="name" 
+                                    required 
+                                    placeholder="مثلا: علی رضایی" 
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-400 mb-2">امتیاز شما</label>
+                                <select 
+                                    name="rating" 
+                                    class="w-full bg-[#121212] border border-white/10 rounded-2xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition"
+                                >
+                                    <option value="5">۵ ستاره (عالی و بی‌نظیر)</option>
+                                    <option value="4">۴ ستاره (خوب و باکیفیت)</option>
+                                    <option value="3">۳ ستاره (معمولی)</option>
+                                    <option value="2">۲ ستاره (نیاز به بهبود)</option>
+                                    <option value="1">۱ ستاره (خوب نبود)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm text-gray-400 mb-2">متن نظر</label>
+                            <textarea 
+                                name="comment" 
+                                rows="4" 
+                                required 
+                                placeholder="نظر خود را درباره طعم، پخت و کیفیت این غذا بنویسید..." 
+                                class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition resize-none"
+                            ></textarea>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="bg-amber-500 text-black font-bold px-8 py-3.5 rounded-2xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20"
+                        >
+                            ارسال نظر
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </section>
