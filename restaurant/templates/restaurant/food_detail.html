@@ -257,25 +257,27 @@
                 <div class="space-y-4 mb-10">
                     {% if reviews %}
                         {% for review in reviews %}
-                            <div class="info-card rounded-2xl p-5 md:p-6">
-                                <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
-                                    <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
-                                            {{ review.name|slice:":1"|upper }}
+                            {%if review.status == 'approved'%}
+                                <div class="info-card rounded-2xl p-5 md:p-6">
+                                    <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
+                                                {{ review.name|slice:":1"|upper }}
+                                            </div>
+                                            <div>
+                                                <h4 class="text-white font-bold text-base">{{ review.name }}</h4>
+                                                <span class="text-xs text-gray-400">{{ review.created_at|default:"اخیر" }}</span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 class="text-white font-bold text-base">{{ review.name }}</h4>
-                                            <span class="text-xs text-gray-400">{{ review.created_at|default:"اخیر" }}</span>
+                                        <div class="flex items-center gap-1 text-amber-500 text-sm">
+                                            {% if review.rating == 5 %}★★★★★{% elif review.rating == 4 %}★★★★☆{% elif review.rating == 3 %}★★★☆☆{% elif review.rating == 2 %}★★☆☆☆{% else %}★☆☆☆☆{% endif %}
                                         </div>
                                     </div>
-                                    <div class="flex items-center gap-1 text-amber-500 text-sm">
-                                        {% if review.rating == 5 %}★★★★★{% elif review.rating == 4 %}★★★★☆{% elif review.rating == 3 %}★★★☆☆{% elif review.rating == 2 %}★★☆☆☆{% else %}★☆☆☆☆{% endif %}
-                                    </div>
+                                    <p class="text-gray-300 leading-relaxed text-sm md:text-base">
+                                        {{ review.comment }}
+                                    </p>
                                 </div>
-                                <p class="text-gray-300 leading-relaxed text-sm md:text-base">
-                                    {{ review.comment }}
-                                </p>
-                            </div>
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <div class="info-card rounded-2xl p-8 text-center text-gray-400">
@@ -291,7 +293,7 @@
                     <!-- در صورت استفاده از فرم جنگو: replace action or form fields as needed -->
                     <form method="POST" action="" class="space-y-4">
                         {% csrf_token %}
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% comment %} <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm text-gray-400 mb-2">نام و نام خانوادگی</label>
                                 <input 
@@ -316,7 +318,6 @@
                                 </select>
                             </div>
                         </div>
-
                         <div>
                             <label class="block text-sm text-gray-400 mb-2">متن نظر</label>
                             <textarea 
@@ -326,8 +327,8 @@
                                 placeholder="نظر خود را درباره طعم، پخت و کیفیت این غذا بنویسید..." 
                                 class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 transition resize-none"
                             ></textarea>
-                        </div>
-
+                        </div> {% endcomment %}
+                        {{form}}
                         <button 
                             type="submit" 
                             class="bg-amber-500 text-black font-bold px-8 py-3.5 rounded-2xl hover:bg-amber-400 transition shadow-lg shadow-amber-500/20"
