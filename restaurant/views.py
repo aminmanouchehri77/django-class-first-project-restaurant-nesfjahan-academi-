@@ -13,7 +13,7 @@ def menu(request):
 
 def food_detail_view(request,pk):
     food=get_object_or_404(Foods,pk=pk)
-    reviews=food.reviews.all()
+    reviews=Review.objects.filter(food=food,status='approved')
     if request.method=='POST':
         comment=ReviewForm(request.POST)
         if comment.is_valid():

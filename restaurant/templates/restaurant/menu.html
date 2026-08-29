@@ -1,4 +1,6 @@
 {% extends "_base.html" %}
+{% load humanize %}
+{% load price_tags %}
 
 {% block title %}منوی رستوران | تجربه لوکس چشایی{% endblock %}
 
@@ -128,7 +130,8 @@
 
                         <div class="flex justify-between items-center gap-4">
                             <span class="text-2xl font-black text-white">
-                                {{ food.price }}
+                                <!-- اعمال فیلترهای جداکننده و فارسی‌ساز جنگو -->
+                                {{ food.price|split_price|fa_num }}
                                 <span class="text-xs text-amber-500 font-normal">تومان</span>
                             </span>
 
@@ -155,6 +158,7 @@
 
 {% block extra_js %}
 <script>
+    // --- اسکریپت فیلتر کردن دسته بندی غذاها ---
     document.addEventListener('DOMContentLoaded', function () {
         const categoryButtons = document.querySelectorAll('.category-btn');
         const foodCards = document.querySelectorAll('.food-card');
