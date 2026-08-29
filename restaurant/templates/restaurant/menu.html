@@ -119,8 +119,15 @@
                             <h3 class="text-xl font-bold text-white">
                                 <a href="{% url 'food_detail' food.id %}">{{ food.name }}</a>
                             </h3>
-                            <div class="flex text-amber-500 text-xs whitespace-nowrap">
-                                ⭐⭐⭐⭐⭐
+                            
+                            <!-- تغییرات جدید: بخش نمایش امتیاز و ستاره‌ها -->
+                            <div class="flex items-center gap-2" dir="ltr">
+                                <div class="star-rating flex gap-0.5" data-rating="{{ food.calculated_avg }}">
+                                    <!-- ستاره‌ها اینجا توسط JS لود می‌شوند -->
+                                </div>
+                                <span class="text-gray-400 text-xs font-bold pt-0.5">
+                                    ({{ food.calculated_avg|floatformat:1|fa_num }})
+                                </span>
                             </div>
                         </div>
 
@@ -130,7 +137,6 @@
 
                         <div class="flex justify-between items-center gap-4">
                             <span class="text-2xl font-black text-white">
-                                <!-- اعمال فیلترهای جداکننده و فارسی‌ساز جنگو -->
                                 {{ food.price|split_price|fa_num }}
                                 <span class="text-xs text-amber-500 font-normal">تومان</span>
                             </span>
@@ -158,8 +164,9 @@
 
 {% block extra_js %}
 <script>
-    // --- اسکریپت فیلتر کردن دسته بندی غذاها ---
     document.addEventListener('DOMContentLoaded', function () {
+        
+        // --- بخش اول: اسکریپت فیلتر کردن دسته‌بندی غذاها ---
         const categoryButtons = document.querySelectorAll('.category-btn');
         const foodCards = document.querySelectorAll('.food-card');
 
@@ -179,7 +186,6 @@
 
                 foodCards.forEach(function (card) {
                     const cardCategory = card.dataset.category;
-
                     if (selectedCategory === 'all' || cardCategory === selectedCategory) {
                         card.classList.remove('food-hidden');
                     } else {
@@ -188,6 +194,40 @@
                 });
             });
         });
+
+        // --- بخش دوم: اسکریپت رندر کردن ستاره‌های امتیاز ---
+        const starContainers = document.querySelectorAll('.star-rating');
+        
+        starContainers.forEach(function(container) {
+            // ۱. گرفتن عدد امتیاز از ویژگی data-rating (و جایگزینی ممیز احتمالی به نقطه برای محاسبات ریاضی)
+            let rawRating = container.getAttribute('data-rating');
+            if (rawRating) {
+                rawRating = rawRating.replace(',', '.').replace('٫', '.');
+            }
+            
+            // ۲. تبدیل رشته به عدد اعشاری (اگر خالی بود پیش‌فرض ۵ در نظر گرفته می‌شود)
+            const rating = parseFloat(rawRating) || 5; 
+            
+            let starsHTML = '';
+            
+            // ۳. ایجاد حلقه ۵ مرحله‌ای برای ساخت ۵ ستاره
+            for (let i = 1; i <= 5; i++) {
+                if (rating >= i) {
+                    // ستاره کامل و روشن (رنگ کهربایی Tailwind)
+                    starsHTML += '<span class="text-amber-500 text-lg">★</span>';
+                } else if (rating >= i - 0.5) {
+                    // نیم‌ستاره (استفاده از همان ستاره اما با شفافیت ۵۰ درصد برای ظاهری مدرن)
+                    starsHTML += '<span class="text-amber-500/50 text-lg">★</span>';
+                } else {
+                    // ستاره خاموش (رنگ خاکستری)
+                    starsHTML += '<span class="text-gray-600 text-lg">★</span>';
+                }
+            }
+            
+            // ۴. تزریق ستاره‌های ساخته شده به درون ظرف HTML
+            container.innerHTML = starsHTML;
+        });
+        
     });
 </script>
 {% endblock extra_js %}
