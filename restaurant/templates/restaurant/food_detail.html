@@ -1,5 +1,7 @@
 {% extends "_base.html" %}
 {% load price_tags %}
+{% load jformat %}
+
 {% block title %}{{ food.name }} | منوی رستوران{% endblock title %}
 
 {% block style_css %}
@@ -266,7 +268,7 @@
                                             </div>
                                             <div>
                                                 <h4 class="text-white font-bold text-base">{{ review.name }}</h4>
-                                                <span class="text-xs text-gray-400">{{ review.created_at|default:"اخیر" }}</span>
+                                                <span class="text-xs text-gray-400">{{ review.created_at|jformat:"%A %d %B %Y %H:%M"|fa_num }}</span>
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-1 text-amber-500 text-sm">

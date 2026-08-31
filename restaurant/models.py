@@ -8,9 +8,7 @@ class Category(models.Model):
     
     def __str__(self):
             return(f'{self.title}')
-        
-    
-    
+            
 class Foods(models.Model):
     id=models.UUIDField(primary_key=True,default=uuid.uuid4,editable=False)
     name=models.CharField(max_length=100)
@@ -30,8 +28,7 @@ class Foods(models.Model):
     
     def __str__(self):
         return(f'{self.name}')
- 
- 
+  
 class Review(models.Model):
     # تعریف حالت‌های مختلف وضعیت
     STATUS_CHOICES = [
