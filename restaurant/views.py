@@ -41,7 +41,7 @@ def food_detail_view(request, pk):
     if count > 0:
         food.calculated_avg = total_score / count
     else:
-        food.calculated_avg = 0
+        food.calculated_avg = 0.0
 
     # بخش ثبت نظر جدید
     if request.method == 'POST':

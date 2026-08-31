@@ -206,8 +206,9 @@
             }
             
             // ۲. تبدیل رشته به عدد اعشاری (اگر خالی بود پیش‌فرض ۵ در نظر گرفته می‌شود)
-            const rating = parseFloat(rawRating) || 5; 
-            
+            const parsed = parseFloat(rawRating);
+            const rating = isNaN(parsed) ? 0 : parsed; 
+    
             let starsHTML = '';
             
             // ۳. ایجاد حلقه ۵ مرحله‌ای برای ساخت ۵ ستاره

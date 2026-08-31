@@ -24,6 +24,7 @@ class Foods(models.Model):
     )
     price=models.PositiveIntegerField()
     content=models.TextField()
+    calculated_avg=models.FloatField()
     is_exist=models.BooleanField()
     created_at=models.DateTimeField(auto_now_add=True)
     
