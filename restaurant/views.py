@@ -30,6 +30,7 @@ def menu(request):
 def food_detail_view(request, pk):
     food = get_object_or_404(Foods, pk=pk)
     reviews = Review.objects.filter(food=food, status='approved')
+    similar_foods=Foods.objects.filter(category=food.category)
     
     # محاسبه میانگین با پایتون ساده برای همین یک غذا
     total_score = 0
@@ -57,6 +58,7 @@ def food_detail_view(request, pk):
         
     return render(request, "restaurant/food_detail.html", context={
         'food': food, 
+        'similar_foods':similar_foods,
         'form': comment, 
         'reviews': reviews
     })

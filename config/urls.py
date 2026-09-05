@@ -8,6 +8,7 @@ urlpatterns = [
 
     # اگر آدرس‌های اپ restaurant را در فایل جداگانه نوشته‌ای:
     path('', include('restaurant.urls')),
+    path('accounts/', include('accounts.urls')),
 ]
 
 # فقط هنگام توسعه با DEBUG=True
